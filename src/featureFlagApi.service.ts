@@ -9,7 +9,10 @@ export function initFeatureFlagClient(options: FeatureFlagServiceOptions) {
     config = options;
 }
 
-export async function fetchFeatureFlag(flagName: string): Promise<boolean> {
+export async function fetchFeatureFlag(
+    flagName: string,
+    userEmail?: string
+): Promise<boolean> {
     if (!config) {
         throw new Error(
             "Feature flags not initialized. Call initFeatureFlags({ apiDomain, apiKey })."
@@ -20,13 +23,17 @@ export async function fetchFeatureFlag(flagName: string): Promise<boolean> {
 
     try {
         const res = await fetch(
-            `${apiDomain}/api/featureFlags/${encodeURIComponent(flagName)}`,
+            `${apiDomain}/api/public/feature-flags`,
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "x-api-key": apiKey,
                 },
+                body: JSON.stringify({
+                    featureFlagName: flagName,
+                    ...(userEmail && { userEmail }),
+                }),
                 cache: "no-store",
             }
         );

@@ -3,4 +3,4 @@ export type FeatureFlagServiceOptions = {
     apiKey: string;
 };
 export declare function initFeatureFlagClient(options: FeatureFlagServiceOptions): void;
-export declare function fetchFeatureFlag(flagName: string): Promise<boolean>;
+export declare function fetchFeatureFlag(flagName: string, userEmail?: string): Promise<boolean>;

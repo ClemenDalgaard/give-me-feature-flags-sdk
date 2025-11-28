@@ -6,19 +6,23 @@ let config = null;
 function initFeatureFlagClient(options) {
     config = options;
 }
-async function fetchFeatureFlag(flagName) {
+async function fetchFeatureFlag(flagName, userEmail) {
     var _a;
     if (!config) {
         throw new Error("Feature flags not initialized. Call initFeatureFlags({ apiDomain, apiKey }).");
     }
     const { apiDomain, apiKey } = config;
     try {
-        const res = await fetch(`${apiDomain}/api/featureFlags/${encodeURIComponent(flagName)}`, {
+        const res = await fetch(`${apiDomain}/api/public/feature-flags`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "x-api-key": apiKey,
             },
+            body: JSON.stringify({
+                featureFlagName: flagName,
+                ...(userEmail && { userEmail }),
+            }),
             cache: "no-store",
         });
         if (!res.ok)
